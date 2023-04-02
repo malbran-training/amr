@@ -390,7 +390,7 @@ postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}
     \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
     \makeatother
     \newcommand{\prompt}[4]{
-         {\ttfamily\llap{{\color{blue}\LARGE\faKeyboardO\hspace{3pt}#4}}\vspace{-\baselineskip}}
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
     }
 
 
@@ -510,18 +510,20 @@ This tutorial was created by
 \subsubsection{Running commands in this
 tutorial}\label{running-commands-in-this-tutorial}}
 
-You can follow this tutorial by typing all the commands you see into a
-terminal window. This is similar to the ``Command Prompt'' window on MS
+You can follow this tutorial by running all the commands provided on the
+\texttt{bioinfsrv} server. To get started, connect to the
+\texttt{bioinfsrv} server using the instructions provided earlier and
+type all the commands you see into the terminal window. Remember, the
+terminal window is similar to the ``Command Prompt'' window on MS
 Windows systems, which allows the user to type DOS commands to manage
 files.
 
-To get started, open a new terminal on your computer and type the
-command below:
+Start by typing the command below:
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{n+nb}{cd} \PYZti{}/course\PYZus{}data/amr/data
+\PY{n+nb}{cd}\PY{+w}{ }\PYZti{}/course\PYZus{}data/amr/data
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -530,16 +532,16 @@ command below:
 \hypertarget{lets-get-started}{%
 \subsection{Let's get started!}\label{lets-get-started}}
 
-This tutorial requires that you have ARIBA installed on your computer.
-It has already been installed on the virtual machine you are using for
-this training course. To activate the ARIBA environment and check that
-the software is installed correctly, run the following command:
+This tutorial uses the ARIBA software application. It has already been
+installed on the server you are using for this training course. To
+activate the ARIBA environment and check that the software is installed
+correctly, run the following command:
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-conda activate ariba\PYZhy{}2.14.6
-ariba \PYZhy{}\PYZhy{}help
+conda\PY{+w}{ }activate\PY{+w}{ }ariba\PYZhy{}2.14.6
+ariba\PY{+w}{ }\PYZhy{}\PYZhy{}help
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -607,7 +609,7 @@ below in the terminal window followed by the Enter key:
 
     It should display something like:
 
-\texttt{/home/manager/course\_data/amr/data}
+\texttt{/home/username/course\_data/amr/data}
 
     Ok, back to the example! We have sequence data for 3 Neisseria
 gonorrhoeae samples and want to determine if the genes \texttt{fitA} and
@@ -619,19 +621,20 @@ First list the fastq files for the samples.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ls fastq
+ls\PY{+w}{ }fastq
 \end{Verbatim}
 \end{tcolorbox}
 
-    We have created a fasta file containing the sequences of the genes
-\texttt{fitA} and \texttt{fbpA}, take a look:
+    For the purpose of this exercise, we have created a fasta file
+containing the sequences of the genes \texttt{fitA} and \texttt{fbpA},
+take a look:
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{n+nb}{cd} basic
+\PY{n+nb}{cd}\PY{+w}{ }basic
 ls
-cat genes.fasta
+cat\PY{+w}{ }genes.fasta
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -644,7 +647,7 @@ all samples
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba prepareref \PYZhy{}f genes.fasta \PYZhy{}\PYZhy{}all\PYZus{}coding yes out
+ariba\PY{+w}{ }prepareref\PY{+w}{ }\PYZhy{}f\PY{+w}{ }genes.fasta\PY{+w}{ }\PYZhy{}\PYZhy{}all\PYZus{}coding\PY{+w}{ }yes\PY{+w}{ }out
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -653,9 +656,9 @@ ariba prepareref \PYZhy{}f genes.fasta \PYZhy{}\PYZhy{}all\PYZus{}coding yes out
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba run out ../fastq/ERR1067813\PYZus{}1.fastq.gz ../fastq/ERR1067813\PYZus{}2.fastq.gz ariba\PYZus{}results\PYZus{}ERR1067813
-ariba run out ../fastq/ERR1067814\PYZus{}1.fastq.gz ../fastq/ERR1067814\PYZus{}2.fastq.gz ariba\PYZus{}results\PYZus{}ERR1067814
-ariba run out ../fastq/ERR1067815\PYZus{}1.fastq.gz ../fastq/ERR1067815\PYZus{}2.fastq.gz ariba\PYZus{}results\PYZus{}ERR1067815
+ariba\PY{+w}{ }run\PY{+w}{ }out\PY{+w}{ }../fastq/ERR1067813\PYZus{}1.fastq.gz\PY{+w}{ }../fastq/ERR1067813\PYZus{}2.fastq.gz\PY{+w}{ }ariba\PYZus{}results\PYZus{}ERR1067813
+ariba\PY{+w}{ }run\PY{+w}{ }out\PY{+w}{ }../fastq/ERR1067814\PYZus{}1.fastq.gz\PY{+w}{ }../fastq/ERR1067814\PYZus{}2.fastq.gz\PY{+w}{ }ariba\PYZus{}results\PYZus{}ERR1067814
+ariba\PY{+w}{ }run\PY{+w}{ }out\PY{+w}{ }../fastq/ERR1067815\PYZus{}1.fastq.gz\PY{+w}{ }../fastq/ERR1067815\PYZus{}2.fastq.gz\PY{+w}{ }ariba\PYZus{}results\PYZus{}ERR1067815
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -664,7 +667,7 @@ ariba run out ../fastq/ERR1067815\PYZus{}1.fastq.gz ../fastq/ERR1067815\PYZus{}2
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary \PYZhy{}\PYZhy{}no\PYZus{}tree all\PYZus{}samples ariba\PYZus{}results*/*.tsv
+ariba\PY{+w}{ }summary\PY{+w}{ }\PYZhy{}\PYZhy{}no\PYZus{}tree\PY{+w}{ }all\PYZus{}samples\PY{+w}{ }ariba\PYZus{}results*/*.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -673,7 +676,7 @@ ariba summary \PYZhy{}\PYZhy{}no\PYZus{}tree all\PYZus{}samples ariba\PYZus{}res
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-cat all\PYZus{}samples.csv
+cat\PY{+w}{ }all\PYZus{}samples.csv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -686,8 +689,8 @@ To determine which genes are in which cluster run:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba refquery out cluster cluster
-ariba refquery out cluster cluster\PYZus{}1
+ariba\PY{+w}{ }refquery\PY{+w}{ }out\PY{+w}{ }cluster\PY{+w}{ }cluster
+ariba\PY{+w}{ }refquery\PY{+w}{ }out\PY{+w}{ }cluster\PY{+w}{ }cluster\PYZus{}1
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -730,8 +733,9 @@ the presence of AMR genes using standard public AMR databases.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-mkdir ../standard
-\PY{n+nb}{cd} ../standard
+\PY{n+nb}{cd}\PY{+w}{ }..
+mkdir\PY{+w}{ }standard
+\PY{n+nb}{cd}\PY{+w}{ }standard
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -771,8 +775,8 @@ database directory called \texttt{ariba\_card\_db}:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba getref card out.card
-ariba prepareref \PYZhy{}f out.card.fa \PYZhy{}m out.card.tsv ariba\PYZus{}card\PYZus{}db
+ariba\PY{+w}{ }getref\PY{+w}{ }card\PY{+w}{ }out.card
+ariba\PY{+w}{ }prepareref\PY{+w}{ }\PYZhy{}f\PY{+w}{ }out.card.fa\PY{+w}{ }\PYZhy{}m\PY{+w}{ }out.card.tsv\PY{+w}{ }ariba\PYZus{}card\PYZus{}db
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -790,7 +794,7 @@ The command to run ARIBA is:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba run ariba\PYZus{}card\PYZus{}db ../fastq/ERR1067813\PYZus{}1.fastq.gz ../fastq/ERR1067813\PYZus{}2.fastq.gz ariba.ERR1067813
+ariba\PY{+w}{ }run\PY{+w}{ }ariba\PYZus{}card\PYZus{}db\PY{+w}{ }../fastq/ERR1067813\PYZus{}1.fastq.gz\PY{+w}{ }../fastq/ERR1067813\PYZus{}2.fastq.gz\PY{+w}{ }ariba.ERR1067813
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -815,9 +819,9 @@ this command depending on how your own files are named):
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{k}{for} sample \PY{k}{in} \PY{l+s+sb}{`}ls ../fastq/*\PYZus{}1.fastq.gz \PY{p}{|} sed \PY{l+s+s1}{\PYZsq{}s/..\PYZbs{}/fastq\PYZbs{}///\PYZsq{}} \PY{p}{|} sed \PY{l+s+s1}{\PYZsq{}s/\PYZbs{}\PYZus{}1.fastq.gz//\PYZsq{}}\PY{l+s+sb}{`}
+\PY{k}{for}\PY{+w}{ }sample\PY{+w}{ }\PY{k}{in}\PY{+w}{ }\PY{l+s+sb}{`}ls\PY{+w}{ }../fastq/*\PYZus{}1.fastq.gz\PY{+w}{ }\PY{p}{|}\PY{+w}{ }sed\PY{+w}{ }\PY{l+s+s1}{\PYZsq{}s/..\PYZbs{}/fastq\PYZbs{}///\PYZsq{}}\PY{+w}{ }\PY{p}{|}\PY{+w}{ }sed\PY{+w}{ }\PY{l+s+s1}{\PYZsq{}s/\PYZbs{}\PYZus{}1.fastq.gz//\PYZsq{}}\PY{l+s+sb}{`}
 \PY{k}{do}
-    ariba run ariba\PYZus{}card\PYZus{}db ../fastq/\PY{l+s+si}{\PYZdl{}\PYZob{}}\PY{n+nv}{sample}\PY{l+s+si}{\PYZcb{}}\PYZus{}1.fastq.gz ../fastq/\PY{l+s+si}{\PYZdl{}\PYZob{}}\PY{n+nv}{sample}\PY{l+s+si}{\PYZcb{}}\PYZus{}2.fastq.gz ariba.\PY{l+s+si}{\PYZdl{}\PYZob{}}\PY{n+nv}{sample}\PY{l+s+si}{\PYZcb{}}
+\PY{+w}{    }ariba\PY{+w}{ }run\PY{+w}{ }ariba\PYZus{}card\PYZus{}db\PY{+w}{ }../fastq/\PY{l+s+si}{\PYZdl{}\PYZob{}}\PY{n+nv}{sample}\PY{l+s+si}{\PYZcb{}}\PYZus{}1.fastq.gz\PY{+w}{ }../fastq/\PY{l+s+si}{\PYZdl{}\PYZob{}}\PY{n+nv}{sample}\PY{l+s+si}{\PYZcb{}}\PYZus{}2.fastq.gz\PY{+w}{ }ariba.\PY{l+s+si}{\PYZdl{}\PYZob{}}\PY{n+nv}{sample}\PY{l+s+si}{\PYZcb{}}
 \PY{k}{done}
 \end{Verbatim}
 \end{tcolorbox}
@@ -833,7 +837,7 @@ While you are waiting for ARIBA to run on all 3 samples, go to the
 \href{https://github.com/sanger-pathogens/ariba/wiki/Task:-run}{ARIBA
 wiki (https://github.com/sanger-pathogens/ariba/wiki/Task:-run} and read
 about the ARIBA output and what each of the columns in the report.tsv
-file mean.
+output file mean.
 
     \hypertarget{summarising-the-results}{%
 \subsection{Summarising the results}\label{summarising-the-results}}
@@ -843,7 +847,7 @@ Now gather together the results
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary all\PYZus{}results ariba.*/report.tsv
+ariba\PY{+w}{ }summary\PY{+w}{ }all\PYZus{}results\PY{+w}{ }ariba.*/report.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -917,7 +921,7 @@ First, let's change to the directory with the reference data.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{n+nb}{cd} ../Ref/
+\PY{n+nb}{cd}\PY{+w}{ }../Ref/
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -945,7 +949,7 @@ interest. In this case, the SNPs file simply contains one line:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-cat aln2meta\PYZus{}input/folP\PYZus{}in.tsv
+cat\PY{+w}{ }aln2meta\PYZus{}input/folP\PYZus{}in.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -975,8 +979,7 @@ run:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba aln2meta \PYZhy{}\PYZhy{}variant\PYZus{}only aln2meta\PYZus{}input/folP.aln \PY{l+s+se}{\PYZbs{}}
-    aln2meta\PYZus{}input/folP\PYZus{}in.tsv coding aln2meta\PYZus{}output/folP
+ariba\PY{+w}{ }aln2meta\PY{+w}{ }\PYZhy{}\PYZhy{}variant\PYZus{}only\PY{+w}{ }aln2meta\PYZus{}input/folP.aln\PY{+w}{ }aln2meta\PYZus{}input/folP\PYZus{}in.tsv\PY{+w}{ }coding\PY{+w}{ }aln2meta\PYZus{}output/folP
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1005,7 +1008,7 @@ ariba aln2meta \PYZhy{}\PYZhy{}variant\PYZus{}only aln2meta\PYZus{}input/folP.al
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ls aln2meta\PYZus{}output/folP*
+ls\PY{+w}{ }aln2meta\PYZus{}output/folP*
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1017,9 +1020,9 @@ database:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba prepareref \PYZhy{}f aln2meta\PYZus{}output/folP.fa \PY{l+s+se}{\PYZbs{}}
-    \PYZhy{}m aln2meta\PYZus{}output/folP.tsv \PYZhy{}\PYZhy{}cdhit\PYZus{}clusters \PY{l+s+se}{\PYZbs{}}
-    aln2meta\PYZus{}output/folP.cluster test.aribadb
+ariba\PY{+w}{ }prepareref\PY{+w}{ }\PYZhy{}f\PY{+w}{ }aln2meta\PYZus{}output/folP.fa\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }\PYZhy{}m\PY{+w}{ }aln2meta\PYZus{}output/folP.tsv\PY{+w}{ }\PYZhy{}\PYZhy{}cdhit\PYZus{}clusters\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }aln2meta\PYZus{}output/folP.cluster\PY{+w}{ }test.aribadb
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1030,7 +1033,7 @@ made:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ls test.aribadb
+ls\PY{+w}{ }test.aribadb
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1042,7 +1045,7 @@ interest, so we will delete it.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-rm \PYZhy{}r test.aribadb
+rm\PY{+w}{ }\PYZhy{}r\PY{+w}{ }test.aribadb
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1059,8 +1062,8 @@ instead of \texttt{coding}. For example:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba aln2meta \PYZhy{}\PYZhy{}variant\PYZus{}only aln2meta\PYZus{}input/16S.aln \PY{l+s+se}{\PYZbs{}}
-    aln2meta\PYZus{}input/16S\PYZus{}in.tsv noncoding aln2meta\PYZus{}output/16S
+ariba\PY{+w}{ }aln2meta\PY{+w}{ }\PYZhy{}\PYZhy{}variant\PYZus{}only\PY{+w}{ }aln2meta\PYZus{}input/16S.aln\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }aln2meta\PYZus{}input/16S\PYZus{}in.tsv\PY{+w}{ }noncoding\PY{+w}{ }aln2meta\PYZus{}output/16S
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1071,10 +1074,10 @@ sequences:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{k}{for} x \PY{k}{in} folP gyrA mtrR parC parE penA ponA porB1b rpoB rpsJ
+\PY{k}{for}\PY{+w}{ }x\PY{+w}{ }\PY{k}{in}\PY{+w}{ }folP\PY{+w}{ }gyrA\PY{+w}{ }mtrR\PY{+w}{ }parC\PY{+w}{ }parE\PY{+w}{ }penA\PY{+w}{ }ponA\PY{+w}{ }porB1b\PY{+w}{ }rpoB\PY{+w}{ }rpsJ
 \PY{k}{do}
-    ariba aln2meta \PYZhy{}\PYZhy{}variant\PYZus{}only aln2meta\PYZus{}input/\PY{n+nv}{\PYZdl{}x}.aln \PY{l+s+se}{\PYZbs{}}
-    aln2meta\PYZus{}input/\PY{n+nv}{\PYZdl{}x}\PY{l+s+se}{\PYZbs{}\PYZus{}}in.tsv coding aln2meta\PYZus{}output/\PY{n+nv}{\PYZdl{}x}
+\PY{+w}{    }ariba\PY{+w}{ }aln2meta\PY{+w}{ }\PYZhy{}\PYZhy{}variant\PYZus{}only\PY{+w}{ }aln2meta\PYZus{}input/\PY{n+nv}{\PYZdl{}x}.aln\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }aln2meta\PYZus{}input/\PY{n+nv}{\PYZdl{}x}\PY{l+s+se}{\PYZbs{}\PYZus{}}in.tsv\PY{+w}{ }coding\PY{+w}{ }aln2meta\PYZus{}output/\PY{n+nv}{\PYZdl{}x}
 \PY{k}{done}
 \end{Verbatim}
 \end{tcolorbox}
@@ -1084,10 +1087,10 @@ sequences:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{k}{for} x \PY{k}{in} 16S 23S
+\PY{k}{for}\PY{+w}{ }x\PY{+w}{ }\PY{k}{in}\PY{+w}{ }16S\PY{+w}{ }23S
 \PY{k}{do}
-    ariba aln2meta \PYZhy{}\PYZhy{}variant\PYZus{}only aln2meta\PYZus{}input/\PY{n+nv}{\PYZdl{}x}.aln \PY{l+s+se}{\PYZbs{}}
-    aln2meta\PYZus{}input/\PY{n+nv}{\PYZdl{}x}\PY{l+s+se}{\PYZbs{}\PYZus{}}in.tsv noncoding aln2meta\PYZus{}output/\PY{n+nv}{\PYZdl{}x}
+\PY{+w}{    }ariba\PY{+w}{ }aln2meta\PY{+w}{ }\PYZhy{}\PYZhy{}variant\PYZus{}only\PY{+w}{ }aln2meta\PYZus{}input/\PY{n+nv}{\PYZdl{}x}.aln\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }aln2meta\PYZus{}input/\PY{n+nv}{\PYZdl{}x}\PY{l+s+se}{\PYZbs{}\PYZus{}}in.tsv\PY{+w}{ }noncoding\PY{+w}{ }aln2meta\PYZus{}output/\PY{n+nv}{\PYZdl{}x}
 \PY{k}{done}
 \end{Verbatim}
 \end{tcolorbox}
@@ -1098,24 +1101,24 @@ to make input files for running \texttt{ariba\ prepareref}.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-cat aln2meta\PYZus{}output/*.fa presence\PYZus{}absence/*.fa \PYZgt{} Ngo\PYZus{}ARIBA.fa
+cat\PY{+w}{ }aln2meta\PYZus{}output/*.fa\PY{+w}{ }presence\PYZus{}absence/*.fa\PY{+w}{ }\PYZgt{}\PY{+w}{ }Ngo\PYZus{}ARIBA.fa
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-cat aln2meta\PYZus{}output/*.tsv presence\PYZus{}absence/presence\PYZus{}absence.tsv \PY{l+s+se}{\PYZbs{}}
-    \PYZgt{} Ngo\PYZus{}ARIBA.tsv
+cat\PY{+w}{ }aln2meta\PYZus{}output/*.tsv\PY{+w}{ }presence\PYZus{}absence/presence\PYZus{}absence.tsv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }\PYZgt{}\PY{+w}{ }Ngo\PYZus{}ARIBA.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-cat aln2meta\PYZus{}output/*.cluster \PY{l+s+se}{\PYZbs{}}
-    presence\PYZus{}absence/presence\PYZus{}absence.clusters \PY{l+s+se}{\PYZbs{}}
-    \PYZgt{} Ngo\PYZus{}ARIBA.clusters
+cat\PY{+w}{ }aln2meta\PYZus{}output/*.cluster\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }presence\PYZus{}absence/presence\PYZus{}absence.clusters\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }\PYZgt{}\PY{+w}{ }Ngo\PYZus{}ARIBA.clusters
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1127,15 +1130,15 @@ generate the database:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-rm \PYZhy{}rf Ngo\PYZus{}ARIBAdb
+rm\PY{+w}{ }\PYZhy{}rf\PY{+w}{ }Ngo\PYZus{}ARIBAdb
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba prepareref \PYZhy{}f Ngo\PYZus{}ARIBA.fa \PYZhy{}m Ngo\PYZus{}ARIBA.tsv \PY{l+s+se}{\PYZbs{}}
-    \PYZhy{}\PYZhy{}cdhit\PYZus{}clusters Ngo\PYZus{}ARIBA.clusters Ngo\PYZus{}ARIBAdb
+ariba\PY{+w}{ }prepareref\PY{+w}{ }\PYZhy{}f\PY{+w}{ }Ngo\PYZus{}ARIBA.fa\PY{+w}{ }\PYZhy{}m\PY{+w}{ }Ngo\PYZus{}ARIBA.tsv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }\PYZhy{}\PYZhy{}cdhit\PYZus{}clusters\PY{+w}{ }Ngo\PYZus{}ARIBA.clusters\PY{+w}{ }Ngo\PYZus{}ARIBAdb
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1149,7 +1152,7 @@ ls
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{n+nb}{cd} ..
+\PY{n+nb}{cd}\PY{+w}{ }..
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1241,7 +1244,7 @@ been run and the results are found in the directory
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ls ARIBA\PYZus{}reports
+ls\PY{+w}{ }ARIBA\PYZus{}reports
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1274,7 +1277,7 @@ directory \texttt{ARIBA\_reports/}.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ls ARIBA\PYZus{}reports \PY{p}{|} wc \PYZhy{}l
+ls\PY{+w}{ }ARIBA\PYZus{}reports\PY{+w}{ }\PY{p}{|}\PY{+w}{ }wc\PY{+w}{ }\PYZhy{}l
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1304,7 +1307,7 @@ except we will skip making the tree:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary \PYZhy{}\PYZhy{}no\PYZus{}tree out ARIBA\PYZus{}reports/*.tsv
+ariba\PY{+w}{ }summary\PY{+w}{ }\PYZhy{}\PYZhy{}no\PYZus{}tree\PY{+w}{ }out\PY{+w}{ }ARIBA\PYZus{}reports/*.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1313,7 +1316,7 @@ ariba summary \PYZhy{}\PYZhy{}no\PYZus{}tree out ARIBA\PYZus{}reports/*.tsv
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ls out.*
+ls\PY{+w}{ }out.*
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1324,7 +1327,7 @@ in the output:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-head \PYZhy{}n \PY{l+m}{2} out.phandango.csv
+head\PY{+w}{ }\PYZhy{}n\PY{+w}{ }\PY{l+m}{2}\PY{+w}{ }out.phandango.csv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1345,8 +1348,8 @@ Phandango. This is one way to make the file with the naming information:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ls ARIBA\PYZus{}reports/* \PY{p}{|} awk \PYZhy{}F/ \PY{l+s+s1}{\PYZsq{}\PYZob{}print \PYZdl{}0,\PYZdl{}NF\PYZcb{}\PYZsq{}} \PY{p}{|} \PY{l+s+se}{\PYZbs{}}
-    sed \PY{l+s+s1}{\PYZsq{}s/.tsv\PYZdl{}//\PYZsq{}} \PYZgt{} filenames.fofn
+ls\PY{+w}{ }ARIBA\PYZus{}reports/*\PY{+w}{ }\PY{p}{|}\PY{+w}{ }awk\PY{+w}{ }\PYZhy{}F/\PY{+w}{ }\PY{l+s+s1}{\PYZsq{}\PYZob{}print \PYZdl{}0,\PYZdl{}NF\PYZcb{}\PYZsq{}}\PY{+w}{ }\PY{p}{|}\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }sed\PY{+w}{ }\PY{l+s+s1}{\PYZsq{}s/.tsv\PYZdl{}//\PYZsq{}}\PY{+w}{ }\PYZgt{}\PY{+w}{ }filenames.fofn
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1356,7 +1359,7 @@ name we would like to use in the output.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-head filenames.fofn
+head\PY{+w}{ }filenames.fofn
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1366,8 +1369,8 @@ option \texttt{-\/-fofn}.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary \PYZhy{}\PYZhy{}no\PYZus{}tree \PYZhy{}\PYZhy{}fofn filenames.fofn \PY{l+s+se}{\PYZbs{}}
-    out ARIBA\PYZus{}reports/*.tsv
+ariba\PY{+w}{ }summary\PY{+w}{ }\PYZhy{}\PYZhy{}no\PYZus{}tree\PY{+w}{ }\PYZhy{}\PYZhy{}fofn\PY{+w}{ }filenames.fofn\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }out\PY{+w}{ }ARIBA\PYZus{}reports/*.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1376,7 +1379,7 @@ ariba summary \PYZhy{}\PYZhy{}no\PYZus{}tree \PYZhy{}\PYZhy{}fofn filenames.fofn
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-head \PYZhy{}n \PY{l+m}{2} out.phandango.csv
+head\PY{+w}{ }\PYZhy{}n\PY{+w}{ }\PY{l+m}{2}\PY{+w}{ }out.phandango.csv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1417,8 +1420,8 @@ columns for the 23S cluster:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary \PYZhy{}\PYZhy{}only\PYZus{}clusters 23S \PYZhy{}\PYZhy{}preset cluster\PYZus{}all \PYZhy{}\PYZhy{}no\PYZus{}tree \PY{l+s+se}{\PYZbs{}}
-  \PYZhy{}\PYZhy{}fofn filenames.fofn out ARIBA\PYZus{}reports/*.tsv
+ariba\PY{+w}{ }summary\PY{+w}{ }\PYZhy{}\PYZhy{}only\PYZus{}clusters\PY{+w}{ }23S\PY{+w}{ }\PYZhy{}\PYZhy{}preset\PY{+w}{ }cluster\PYZus{}all\PY{+w}{ }\PYZhy{}\PYZhy{}no\PYZus{}tree\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{  }\PYZhy{}\PYZhy{}fofn\PY{+w}{ }filenames.fofn\PY{+w}{ }out\PY{+w}{ }ARIBA\PYZus{}reports/*.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1445,9 +1448,9 @@ using the option \texttt{-\/-cluster\_cols} instead of
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary \PYZhy{}\PYZhy{}only\PYZus{}clusters 23S \PYZhy{}\PYZhy{}cluster\PYZus{}cols match,pct\PYZus{}id \PY{l+s+se}{\PYZbs{}}
-    \PYZhy{}\PYZhy{}no\PYZus{}tree \PYZhy{}\PYZhy{}fofn filenames.fofn out \PY{l+s+se}{\PYZbs{}}
-    ARIBA\PYZus{}reports/*.tsv
+ariba\PY{+w}{ }summary\PY{+w}{ }\PYZhy{}\PYZhy{}only\PYZus{}clusters\PY{+w}{ }23S\PY{+w}{ }\PYZhy{}\PYZhy{}cluster\PYZus{}cols\PY{+w}{ }match,pct\PYZus{}id\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }\PYZhy{}\PYZhy{}no\PYZus{}tree\PY{+w}{ }\PYZhy{}\PYZhy{}fofn\PY{+w}{ }filenames.fofn\PY{+w}{ }out\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }ARIBA\PYZus{}reports/*.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1470,8 +1473,8 @@ We can view the calls for all the known variants by adding the
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary \PYZhy{}\PYZhy{}only\PYZus{}clusters 23S \PYZhy{}\PYZhy{}known\PYZus{}variants \PYZhy{}\PYZhy{}no\PYZus{}tree \PY{l+s+se}{\PYZbs{}}
-  \PYZhy{}\PYZhy{}fofn filenames.fofn out ARIBA\PYZus{}reports/*.tsv
+ariba\PY{+w}{ }summary\PY{+w}{ }\PYZhy{}\PYZhy{}only\PYZus{}clusters\PY{+w}{ }23S\PY{+w}{ }\PYZhy{}\PYZhy{}known\PYZus{}variants\PY{+w}{ }\PYZhy{}\PYZhy{}no\PYZus{}tree\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{  }\PYZhy{}\PYZhy{}fofn\PY{+w}{ }filenames.fofn\PY{+w}{ }out\PY{+w}{ }ARIBA\PYZus{}reports/*.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1499,8 +1502,8 @@ the percentage.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary \PYZhy{}\PYZhy{}only\PYZus{}clusters 23S \PYZhy{}\PYZhy{}novel\PYZus{}variants \PYZhy{}\PYZhy{}no\PYZus{}tree \PY{l+s+se}{\PYZbs{}}
-  \PYZhy{}\PYZhy{}fofn filenames.fofn out ARIBA\PYZus{}reports/*.tsv
+ariba\PY{+w}{ }summary\PY{+w}{ }\PYZhy{}\PYZhy{}only\PYZus{}clusters\PY{+w}{ }23S\PY{+w}{ }\PYZhy{}\PYZhy{}novel\PYZus{}variants\PY{+w}{ }\PYZhy{}\PYZhy{}no\PYZus{}tree\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{  }\PYZhy{}\PYZhy{}fofn\PY{+w}{ }filenames.fofn\PY{+w}{ }out\PY{+w}{ }ARIBA\PYZus{}reports/*.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1544,7 +1547,7 @@ at least one drug. It looks like this:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-head mic\PYZus{}data.tsv
+head\PY{+w}{ }mic\PYZus{}data.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1565,9 +1568,9 @@ be identified:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary \PYZhy{}\PYZhy{}row\PYZus{}filter n \PYZhy{}\PYZhy{}cluster\PYZus{}cols assembled,known\PYZus{}var \PY{l+s+se}{\PYZbs{}}
-    \PYZhy{}\PYZhy{}only\PYZus{}clusters 23S,mtrR \PYZhy{}\PYZhy{}v\PYZus{}groups \PYZhy{}\PYZhy{}no\PYZus{}tree \PY{l+s+se}{\PYZbs{}}
-    \PYZhy{}\PYZhy{}fofn filenames.fofn summary.AZMknowngroups
+ariba\PY{+w}{ }summary\PY{+w}{ }\PYZhy{}\PYZhy{}row\PYZus{}filter\PY{+w}{ }n\PY{+w}{ }\PYZhy{}\PYZhy{}cluster\PYZus{}cols\PY{+w}{ }assembled,known\PYZus{}var\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }\PYZhy{}\PYZhy{}only\PYZus{}clusters\PY{+w}{ }23S,mtrR\PY{+w}{ }\PYZhy{}\PYZhy{}v\PYZus{}groups\PY{+w}{ }\PYZhy{}\PYZhy{}no\PYZus{}tree\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }\PYZhy{}\PYZhy{}fofn\PY{+w}{ }filenames.fofn\PY{+w}{ }summary.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1580,9 +1583,9 @@ and mtrR:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba micplot Ref/Ngo\PYZus{}ARIBAdb/ \PYZhy{}\PYZhy{}interrupted Azithromycin \PY{l+s+se}{\PYZbs{}}
-    mic\PYZus{}data.tsv summary.AZMknowngroups.csv \PY{l+s+se}{\PYZbs{}}
-    micplot.AZMknowngroups
+ariba\PY{+w}{ }micplot\PY{+w}{ }Ref/Ngo\PYZus{}ARIBAdb/\PY{+w}{ }\PYZhy{}\PYZhy{}interrupted\PY{+w}{ }Azithromycin\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }mic\PYZus{}data.tsv\PY{+w}{ }summary.AZMknowngroups.csv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }micplot.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1608,9 +1611,9 @@ in this case 0.25 and 2, using the option \texttt{-\/-hlines}.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba micplot Ref/Ngo\PYZus{}ARIBAdb/ \PYZhy{}\PYZhy{}interrupted \PYZhy{}\PYZhy{}hlines \PY{l+m}{0}.25,2 \PY{l+s+se}{\PYZbs{}}
-    Azithromycin mic\PYZus{}data.tsv summary.AZMknowngroups.csv \PY{l+s+se}{\PYZbs{}}
-    micplot.AZMknowngroups
+ariba\PY{+w}{ }micplot\PY{+w}{ }Ref/Ngo\PYZus{}ARIBAdb/\PY{+w}{ }\PYZhy{}\PYZhy{}interrupted\PY{+w}{ }\PYZhy{}\PYZhy{}hlines\PY{+w}{ }\PY{l+m}{0}.25,2\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }Azithromycin\PY{+w}{ }mic\PYZus{}data.tsv\PY{+w}{ }summary.AZMknowngroups.csv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }micplot.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1636,9 +1639,9 @@ points together.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba micplot Ref/Ngo\PYZus{}ARIBAdb/ \PYZhy{}\PYZhy{}interrupted \PYZhy{}\PYZhy{}hlines \PY{l+m}{0}.25,2 \PY{l+s+se}{\PYZbs{}}
-    \PYZhy{}\PYZhy{}point\PYZus{}size \PY{l+m}{0} Azithromycin mic\PYZus{}data.tsv \PY{l+s+se}{\PYZbs{}}
-    summary.AZMknowngroups.csv micplot.AZMknowngroups
+ariba\PY{+w}{ }micplot\PY{+w}{ }Ref/Ngo\PYZus{}ARIBAdb/\PY{+w}{ }\PYZhy{}\PYZhy{}interrupted\PY{+w}{ }\PYZhy{}\PYZhy{}hlines\PY{+w}{ }\PY{l+m}{0}.25,2\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }\PYZhy{}\PYZhy{}point\PYZus{}size\PY{+w}{ }\PY{l+m}{0}\PY{+w}{ }Azithromycin\PY{+w}{ }mic\PYZus{}data.tsv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }summary.AZMknowngroups.csv\PY{+w}{ }micplot.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1657,10 +1660,10 @@ plot, using the option \texttt{-\/-plot\_types}. The default is
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba micplot Ref/Ngo\PYZus{}ARIBAdb/ \PYZhy{}\PYZhy{}interrupted \PYZhy{}\PYZhy{}hlines \PY{l+m}{0}.25,2 \PY{l+s+se}{\PYZbs{}}
- \PYZhy{}\PYZhy{}plot\PYZus{}types point \PYZhy{}\PYZhy{}point\PYZus{}size \PY{l+m}{0} \PY{l+s+se}{\PYZbs{}}
- Azithromycin mic\PYZus{}data.tsv summary.AZMknowngroups.csv \PY{l+s+se}{\PYZbs{}}
- micplot.AZMknowngroups
+ariba\PY{+w}{ }micplot\PY{+w}{ }Ref/Ngo\PYZus{}ARIBAdb/\PY{+w}{ }\PYZhy{}\PYZhy{}interrupted\PY{+w}{ }\PYZhy{}\PYZhy{}hlines\PY{+w}{ }\PY{l+m}{0}.25,2\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }\PYZhy{}\PYZhy{}plot\PYZus{}types\PY{+w}{ }point\PY{+w}{ }\PYZhy{}\PYZhy{}point\PYZus{}size\PY{+w}{ }\PY{l+m}{0}\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }Azithromycin\PY{+w}{ }mic\PYZus{}data.tsv\PY{+w}{ }summary.AZMknowngroups.csv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }micplot.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1685,9 +1688,9 @@ palette can be changed using the option \texttt{-\/-colourmap}.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba micplot Ref/Ngo\PYZus{}ARIBAdb/ \PYZhy{}\PYZhy{}interrupted \PYZhy{}\PYZhy{}hlines \PY{l+m}{0}.25,2 \PY{l+s+se}{\PYZbs{}}
- \PYZhy{}\PYZhy{}colourmap PiYG \PYZhy{}\PYZhy{}point\PYZus{}size \PY{l+m}{0} Azithromycin mic\PYZus{}data.tsv \PY{l+s+se}{\PYZbs{}}
- summary.AZMknowngroups.csv micplot.AZMknowngroups
+ariba\PY{+w}{ }micplot\PY{+w}{ }Ref/Ngo\PYZus{}ARIBAdb/\PY{+w}{ }\PYZhy{}\PYZhy{}interrupted\PY{+w}{ }\PYZhy{}\PYZhy{}hlines\PY{+w}{ }\PY{l+m}{0}.25,2\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }\PYZhy{}\PYZhy{}colourmap\PY{+w}{ }PiYG\PY{+w}{ }\PYZhy{}\PYZhy{}point\PYZus{}size\PY{+w}{ }\PY{l+m}{0}\PY{+w}{ }Azithromycin\PY{+w}{ }mic\PYZus{}data.tsv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }summary.AZMknowngroups.csv\PY{+w}{ }micplot.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1706,10 +1709,10 @@ using the option \texttt{-\/-colour\_skip}:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba micplot Ref/Ngo\PYZus{}ARIBAdb/ \PYZhy{}\PYZhy{}interrupted \PYZhy{}\PYZhy{}hlines \PY{l+m}{0}.25,2 \PY{l+s+se}{\PYZbs{}}
- \PYZhy{}\PYZhy{}colourmap PiYG \PYZhy{}\PYZhy{}colour\PYZus{}skip \PY{l+m}{0}.35,0.65 \PYZhy{}\PYZhy{}point\PYZus{}size \PY{l+m}{0} \PY{l+s+se}{\PYZbs{}}
- Azithromycin mic\PYZus{}data.tsv summary.AZMknowngroups.csv \PY{l+s+se}{\PYZbs{}}
- micplot.AZMknowngroups
+ariba\PY{+w}{ }micplot\PY{+w}{ }Ref/Ngo\PYZus{}ARIBAdb/\PY{+w}{ }\PYZhy{}\PYZhy{}interrupted\PY{+w}{ }\PYZhy{}\PYZhy{}hlines\PY{+w}{ }\PY{l+m}{0}.25,2\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }\PYZhy{}\PYZhy{}colourmap\PY{+w}{ }PiYG\PY{+w}{ }\PYZhy{}\PYZhy{}colour\PYZus{}skip\PY{+w}{ }\PY{l+m}{0}.35,0.65\PY{+w}{ }\PYZhy{}\PYZhy{}point\PYZus{}size\PY{+w}{ }\PY{l+m}{0}\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }Azithromycin\PY{+w}{ }mic\PYZus{}data.tsv\PY{+w}{ }summary.AZMknowngroups.csv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }micplot.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1729,10 +1732,10 @@ the ``Dark2'' colour palette:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba micplot Ref/Ngo\PYZus{}ARIBAdb/ \PYZhy{}\PYZhy{}interrupted \PYZhy{}\PYZhy{}hlines \PY{l+m}{0}.25,2 \PY{l+s+se}{\PYZbs{}}
- \PYZhy{}\PYZhy{}colourmap Dark2 \PYZhy{}\PYZhy{}number\PYZus{}of\PYZus{}colours \PY{l+m}{3} \PYZhy{}\PYZhy{}point\PYZus{}size \PY{l+m}{0} \PY{l+s+se}{\PYZbs{}}
- Azithromycin mic\PYZus{}data.tsv summary.AZMknowngroups.csv \PY{l+s+se}{\PYZbs{}}
- micplot.AZMknowngroups
+ariba\PY{+w}{ }micplot\PY{+w}{ }Ref/Ngo\PYZus{}ARIBAdb/\PY{+w}{ }\PYZhy{}\PYZhy{}interrupted\PY{+w}{ }\PYZhy{}\PYZhy{}hlines\PY{+w}{ }\PY{l+m}{0}.25,2\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }\PYZhy{}\PYZhy{}colourmap\PY{+w}{ }Dark2\PY{+w}{ }\PYZhy{}\PYZhy{}number\PYZus{}of\PYZus{}colours\PY{+w}{ }\PY{l+m}{3}\PY{+w}{ }\PYZhy{}\PYZhy{}point\PYZus{}size\PY{+w}{ }\PY{l+m}{0}\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }Azithromycin\PY{+w}{ }mic\PYZus{}data.tsv\PY{+w}{ }summary.AZMknowngroups.csv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }micplot.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1750,9 +1753,9 @@ figure.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba micplot Ref/Ngo\PYZus{}ARIBAdb/ \PYZhy{}\PYZhy{}interrupted \PYZhy{}\PYZhy{}hlines \PY{l+m}{0}.25,2 \PY{l+s+se}{\PYZbs{}}
- \PYZhy{}\PYZhy{}number\PYZus{}of\PYZus{}colours \PY{l+m}{1} \PYZhy{}\PYZhy{}point\PYZus{}size \PY{l+m}{0} Azithromycin \PY{l+s+se}{\PYZbs{}}
- mic\PYZus{}data.tsv summary.AZMknowngroups.csv micplot.AZMknowngroups
+ariba\PY{+w}{ }micplot\PY{+w}{ }Ref/Ngo\PYZus{}ARIBAdb/\PY{+w}{ }\PYZhy{}\PYZhy{}interrupted\PY{+w}{ }\PYZhy{}\PYZhy{}hlines\PY{+w}{ }\PY{l+m}{0}.25,2\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }\PYZhy{}\PYZhy{}number\PYZus{}of\PYZus{}colours\PY{+w}{ }\PY{l+m}{1}\PY{+w}{ }\PYZhy{}\PYZhy{}point\PYZus{}size\PY{+w}{ }\PY{l+m}{0}\PY{+w}{ }Azithromycin\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }mic\PYZus{}data.tsv\PY{+w}{ }summary.AZMknowngroups.csv\PY{+w}{ }micplot.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
