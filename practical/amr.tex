@@ -200,6 +200,8 @@ postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}
 
 
 
+
+
 % Pygments definitions
 \makeatletter
 \def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
@@ -390,7 +392,7 @@ postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}
     \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
     \makeatother
     \newcommand{\prompt}[4]{
-        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+        {\ttfamily\llap{{\color{blue}\LARGE\faKeyboardO\hspace{3pt}#4}}\vspace{-\baselineskip}}
     }
 
 
@@ -449,7 +451,7 @@ PMID:
 
 A copy of the paper can be found at
 
-\texttt{/course\_data/amr/ariba\_paper.pdf}
+\texttt{\textasciitilde{}/course\_data/amr/ariba\_paper.pdf}
 
 \hypertarget{learning-outcomes}{%
 \subsection{Learning outcomes}\label{learning-outcomes}}
@@ -499,26 +501,28 @@ This tutorial comprises the following sections:
   the samples}
 \end{enumerate}
 
-\hypertarget{authors}{%
-\subsection{Authors}\label{authors}}
+\hypertarget{authors-and-license}{%
+\subsection{Authors and License}\label{authors-and-license}}
 
 This tutorial was created by
 \href{https://github.com/jacquikeane}{Jacqui Keane} and
 \href{https://github.com/martinghunt}{Martin Hunt}.
 
+The content is licensed under a
+\href{https://creativecommons.org/licenses/by/4.0/}{Creative Commons
+Attribution 4.0 International License (CC-By 4.0)}.
+
     \hypertarget{running-commands-in-this-tutorial}{%
 \subsubsection{Running commands in this
 tutorial}\label{running-commands-in-this-tutorial}}
 
-You can follow this tutorial by running all the commands provided on the
-\texttt{bioinfsrv} server. To get started, connect to the
-\texttt{bioinfsrv} server using the instructions provided earlier and
-type all the commands you see into the terminal window. Remember, the
-terminal window is similar to the ``Command Prompt'' window on MS
-Windows systems, which allows the user to type DOS commands to manage
-files.
+You can follow this tutorial by typing all the commands you see in a
+terminal window on your computer. This is similar to the ``Command
+Prompt'' window on MS Windows systems, which allows the user to type DOS
+commands to manage files.
 
-Start by typing the command below:
+To get started, open a terminal window and type the command below
+followed by the \texttt{Enter} key:
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
@@ -532,10 +536,10 @@ Start by typing the command below:
 \hypertarget{lets-get-started}{%
 \subsection{Let's get started!}\label{lets-get-started}}
 
-This tutorial uses the ARIBA software application. It has already been
-installed on the server you are using for this training course. To
-activate the ARIBA environment and check that the software is installed
-correctly, run the following command:
+This tutorial uses the \texttt{ARIBA} software application. It has
+already been installed on the computer you are using for this training
+course. To activate the ARIBA conda environment and check that the
+software is installed correctly, run the following command:
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
