@@ -33,13 +33,6 @@ postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}
     \usepackage[breakable]{tcolorbox}
     \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
 
-    \usepackage{iftex}
-    \ifPDFTeX
-    	\usepackage[T1]{fontenc}
-    	\usepackage{mathpazo}
-    \else
-    	\usepackage{fontspec}
-    \fi
 
     % Basic figure setup, for now with no caption control since it's done
     % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
@@ -53,8 +46,6 @@ postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}
     \DeclareCaptionFormat{nocaption}{}
     \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
 
-    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
-    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
     \usepackage{float}
     \floatplacement{figure}{H} % forces figures to be placed at the correct location
     \usepackage{xcolor} % Allow colors to be defined
@@ -69,8 +60,39 @@ postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}
     }
     \usepackage{upquote} % Upright quotes for verbatim code
     \usepackage{eurosym} % defines \euro
-    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
     \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
 
     % The hyperref package gives us a pdf with properly built
     % internal navigation ('pdf bookmarks' for the table of contents,
@@ -81,6 +103,8 @@ postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}
     \usepackage{titling}
     \usepackage{longtable} % longtable support required by pandoc >1.10
     \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
     \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
     \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
                                 % normalem makes italics be italics, not underlines
@@ -112,6 +136,9 @@ postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}
     \definecolor{ansi-white-intense}{HTML}{A1A6B2}
     \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
     \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
 
     % commands and environments needed by pandoc snippets
     % extracted from the output of `pandoc -s`
@@ -173,6 +200,8 @@ postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}
 
 
 
+
+
 % Pygments definitions
 \makeatletter
 \def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
@@ -185,73 +214,73 @@ postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}
     \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
 \def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
 
-\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
-\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
-\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
-\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
-\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
-\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
-\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
-\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
-\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
-\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
-\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
-\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
-\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
-\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
-\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
-\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
-\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
-\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
-\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
-\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
-\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
-\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
-\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
-\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
-\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
-\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
-\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
-\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
-\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
-\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
-\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
-\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
-\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
-\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
-\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
-\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
-\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
-\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
-\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
-\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
 
 \def\PYZbs{\char`\\}
 \def\PYZus{\char`\_}
@@ -404,8 +433,15 @@ ARIBA}\label{antimicrobial-resistance-identification-using-ariba}}
 \hypertarget{introduction}{%
 \subsection{Introduction}\label{introduction}}
 
-ARIBA is a tool that can be used to identify the prescence/abscence of a
-set of genes and their variants in a sample. In particular, it was
+Antimicrobial resistance (AMR) is one of the major threats to human and
+animal health worldwide. An important component of any strategy to
+tackle antimicrobial resistance (AMR) is having rapid and accurate
+methods for identifying markers of resistance. ARIBA is one such method
+or tool that can be used to detect and identify antibiotic resistance
+genes from whole genome sequencing data.
+
+ARIBA can be used to identify the prescence/abscence of a set of genes
+and their variants from sequence data of a sample. In particular, it was
 designed to detect and identify antibiotic resistance genes. This
 tutorial will walk you through the analysis of the \textit{Neisseria
 gonorrhoeae} data set used in the ARIBA paper:
@@ -413,8 +449,8 @@ gonorrhoeae} data set used in the ARIBA paper:
 \begin{quote}
 \textbf{ARIBA: rapid antimicrobial resistance genotyping directly from
 sequencing reads}\\
-Hunt M, Mather AE, Sánchez-Busó L, Page AJ, Parkhill J , Keane JA,
-Harris SR.\\
+Hunt M, Mather AE, Sánchez-Busó L, Page AJ, Parkhill J, Keane JA, Harris
+SR.\\
 \textit{Microbial Genomics 2017. doi: 110.1099/mgen.0.000131}\\
 PMID:
 \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5695208/}{29177089}
@@ -498,7 +534,7 @@ followed by the \texttt{Enter} key:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{n+nb}{cd} \PYZti{}/course\PYZus{}data/amr/data
+\PY{n+nb}{cd}\PY{+w}{ }\PYZti{}/course\PYZus{}data/amr/data
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -516,8 +552,8 @@ correctly, run the following command:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-conda activate ariba\PYZhy{}2.14.6
-ariba \PYZhy{}\PYZhy{}help
+conda\PY{+w}{ }activate\PY{+w}{ }ariba\PYZhy{}2.14.6
+ariba\PY{+w}{ }\PYZhy{}\PYZhy{}help
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -548,10 +584,6 @@ Available commands:
     test          Run small built-in test dataset
     version       Get versions and exit
 \end{verbatim}
-
-For download and installation instructions for ARIBA, please see the
-\href{https://github.com/sanger-pathogens/ariba}{ARIBA GitHub-page at
-https://github.com/sanger-pathogens/ariba}.
 
 To get started with the tutorial, head to the first section:
 \href{basic_ariba.ipynb}{Detect prescence/abscence of genes with ARIBA}
@@ -597,7 +629,7 @@ First list the fastq files for the samples.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ls fastq
+ls\PY{+w}{ }fastq
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -608,9 +640,9 @@ take a look:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{n+nb}{cd} basic
+\PY{n+nb}{cd}\PY{+w}{ }basic
 ls
-cat genes.fasta
+cat\PY{+w}{ }genes.fasta
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -623,7 +655,7 @@ all samples
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba prepareref \PYZhy{}f genes.fasta \PYZhy{}\PYZhy{}all\PYZus{}coding yes out
+ariba\PY{+w}{ }prepareref\PY{+w}{ }\PYZhy{}f\PY{+w}{ }genes.fasta\PY{+w}{ }\PYZhy{}\PYZhy{}all\PYZus{}coding\PY{+w}{ }yes\PY{+w}{ }out
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -632,7 +664,7 @@ ariba prepareref \PYZhy{}f genes.fasta \PYZhy{}\PYZhy{}all\PYZus{}coding yes out
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba run out ../fastq/ERR1067813\PYZus{}1.fastq.gz ../fastq/ERR1067813\PYZus{}2.fastq.gz \PY{l+s+se}{\PYZbs{}}
+ariba\PY{+w}{ }run\PY{+w}{ }out\PY{+w}{ }../fastq/ERR1067813\PYZus{}1.fastq.gz\PY{+w}{ }../fastq/ERR1067813\PYZus{}2.fastq.gz\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
 ariba\PYZus{}results\PYZus{}ERR1067813
 \end{Verbatim}
 \end{tcolorbox}
@@ -640,7 +672,7 @@ ariba\PYZus{}results\PYZus{}ERR1067813
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba run out ../fastq/ERR1067814\PYZus{}1.fastq.gz ../fastq/ERR1067814\PYZus{}2.fastq.gz \PY{l+s+se}{\PYZbs{}}
+ariba\PY{+w}{ }run\PY{+w}{ }out\PY{+w}{ }../fastq/ERR1067814\PYZus{}1.fastq.gz\PY{+w}{ }../fastq/ERR1067814\PYZus{}2.fastq.gz\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
 ariba\PYZus{}results\PYZus{}ERR1067814
 \end{Verbatim}
 \end{tcolorbox}
@@ -648,7 +680,7 @@ ariba\PYZus{}results\PYZus{}ERR1067814
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba run out ../fastq/ERR1067815\PYZus{}1.fastq.gz ../fastq/ERR1067815\PYZus{}2.fastq.gz \PY{l+s+se}{\PYZbs{}}
+ariba\PY{+w}{ }run\PY{+w}{ }out\PY{+w}{ }../fastq/ERR1067815\PYZus{}1.fastq.gz\PY{+w}{ }../fastq/ERR1067815\PYZus{}2.fastq.gz\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
 ariba\PYZus{}results\PYZus{}ERR1067815
 \end{Verbatim}
 \end{tcolorbox}
@@ -659,7 +691,7 @@ ARIBA not to generate a tree):
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary \PYZhy{}\PYZhy{}no\PYZus{}tree all\PYZus{}samples ariba\PYZus{}results*/report.tsv
+ariba\PY{+w}{ }summary\PY{+w}{ }\PYZhy{}\PYZhy{}no\PYZus{}tree\PY{+w}{ }all\PYZus{}samples\PY{+w}{ }ariba\PYZus{}results*/report.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -668,7 +700,7 @@ ariba summary \PYZhy{}\PYZhy{}no\PYZus{}tree all\PYZus{}samples ariba\PYZus{}res
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-cat all\PYZus{}samples.csv
+cat\PY{+w}{ }all\PYZus{}samples.csv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -681,8 +713,8 @@ To determine which genes are in which cluster run:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba refquery out cluster cluster
-ariba refquery out cluster cluster\PYZus{}1
+ariba\PY{+w}{ }refquery\PY{+w}{ }out\PY{+w}{ }cluster\PY{+w}{ }cluster
+ariba\PY{+w}{ }refquery\PY{+w}{ }out\PY{+w}{ }cluster\PY{+w}{ }cluster\PYZus{}1
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -725,9 +757,9 @@ the presence of AMR genes using standard public AMR databases.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{n+nb}{cd} ..
-mkdir standard
-\PY{n+nb}{cd} standard
+\PY{n+nb}{cd}\PY{+w}{ }..
+mkdir\PY{+w}{ }standard
+\PY{n+nb}{cd}\PY{+w}{ }standard
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -770,8 +802,8 @@ database directory called \texttt{ariba\_card\_db}:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba getref card out.card
-ariba prepareref \PYZhy{}f out.card.fa \PYZhy{}m out.card.tsv ariba\PYZus{}card\PYZus{}db
+ariba\PY{+w}{ }getref\PY{+w}{ }card\PY{+w}{ }out.card
+ariba\PY{+w}{ }prepareref\PY{+w}{ }\PYZhy{}f\PY{+w}{ }out.card.fa\PY{+w}{ }\PYZhy{}m\PY{+w}{ }out.card.tsv\PY{+w}{ }ariba\PYZus{}card\PYZus{}db
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -790,8 +822,8 @@ The command to run ARIBA is:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba run ariba\PYZus{}card\PYZus{}db ../fastq/ERR1067813\PYZus{}1.fastq.gz \PY{l+s+se}{\PYZbs{}}
-../fastq/ERR1067813\PYZus{}2.fastq.gz ERR1067813
+ariba\PY{+w}{ }run\PY{+w}{ }ariba\PYZus{}card\PYZus{}db\PY{+w}{ }../fastq/ERR1067813\PYZus{}1.fastq.gz\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+../fastq/ERR1067813\PYZus{}2.fastq.gz\PY{+w}{ }ERR1067813
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -825,10 +857,10 @@ To run ARIBA on all samples type:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{k}{for} s in \PY{l+s+sb}{`}ls ../fastq/*1.f*.gz \PY{p}{|} sed \PY{l+s+s1}{\PYZsq{}s/..\PYZbs{}/fastq\PYZbs{}///\PYZsq{}} \PY{p}{|} sed \PY{l+s+s1}{\PYZsq{}s/\PYZbs{}\PYZus{}1.fastq.gz//\PYZsq{}}\PY{l+s+sb}{`}
+\PY{k}{for}\PY{+w}{ }s\PY{+w}{ }\PY{k}{in}\PY{+w}{ }\PY{l+s+sb}{`}ls\PY{+w}{ }../fastq/*1.f*.gz\PY{+w}{ }\PY{p}{|}\PY{+w}{ }sed\PY{+w}{ }\PY{l+s+s1}{\PYZsq{}s/..\PYZbs{}/fastq\PYZbs{}///\PYZsq{}}\PY{+w}{ }\PY{p}{|}\PY{+w}{ }sed\PY{+w}{ }\PY{l+s+s1}{\PYZsq{}s/\PYZbs{}\PYZus{}1.fastq.gz//\PYZsq{}}\PY{l+s+sb}{`}
 \PY{k}{do}
-    ariba run ariba\PYZus{}card\PYZus{}db ../fastq/\PY{l+s+si}{\PYZdl{}\PYZob{}}\PY{n+nv}{s}\PY{l+s+si}{\PYZcb{}}\PYZus{}1.fastq.gz ../fastq/\PY{l+s+si}{\PYZdl{}\PYZob{}}\PY{n+nv}{s}\PY{l+s+si}{\PYZcb{}}\PYZus{}2.fastq.gz \PY{l+s+se}{\PYZbs{}}
-    ariba.\PY{l+s+si}{\PYZdl{}\PYZob{}}\PY{n+nv}{s}\PY{l+s+si}{\PYZcb{}}
+\PY{+w}{    }ariba\PY{+w}{ }run\PY{+w}{ }ariba\PYZus{}card\PYZus{}db\PY{+w}{ }../fastq/\PY{l+s+si}{\PYZdl{}\PYZob{}}\PY{n+nv}{s}\PY{l+s+si}{\PYZcb{}}\PYZus{}1.fastq.gz\PY{+w}{ }../fastq/\PY{l+s+si}{\PYZdl{}\PYZob{}}\PY{n+nv}{s}\PY{l+s+si}{\PYZcb{}}\PYZus{}2.fastq.gz\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }ariba.\PY{l+s+si}{\PYZdl{}\PYZob{}}\PY{n+nv}{s}\PY{l+s+si}{\PYZcb{}}
 \PY{k}{done}
 \end{Verbatim}
 \end{tcolorbox}
@@ -857,7 +889,7 @@ Let's also look more closely at the command
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ls ../fastq/*1.f*.gz
+ls\PY{+w}{ }../fastq/*1.f*.gz
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -867,7 +899,7 @@ with `1.fastq.gz' which should give us one fastq file for each sample.
 However all the files are prefixed with the path or location of the file
 (\texttt{../fastq/}). To remove this we will use the \texttt{sed}
 command to replace all occurences of \texttt{../fastq/} with an empty
-string ''. Note the additional backslashes (\textbackslash{}) used to
+string '\,'. Note the additional backslashes (\textbackslash) used to
 escape the forward slashes (/) in the path.
 
 Try it:
@@ -875,7 +907,7 @@ Try it:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ls ../fastq/*1.f*.gz \PY{p}{|} sed \PY{l+s+s1}{\PYZsq{}s/..\PYZbs{}/fastq\PYZbs{}///\PYZsq{}}
+ls\PY{+w}{ }../fastq/*1.f*.gz\PY{+w}{ }\PY{p}{|}\PY{+w}{ }sed\PY{+w}{ }\PY{l+s+s1}{\PYZsq{}s/..\PYZbs{}/fastq\PYZbs{}///\PYZsq{}}
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -890,7 +922,7 @@ Try it:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ls ../fastq/*1.fastq.gz \PY{p}{|} sed \PY{l+s+s1}{\PYZsq{}s/..\PYZbs{}/fastq\PYZbs{}///\PYZsq{}} \PY{p}{|} sed \PY{l+s+s1}{\PYZsq{}s/\PYZbs{}\PYZus{}1.fastq.gz//\PYZsq{}}
+ls\PY{+w}{ }../fastq/*1.fastq.gz\PY{+w}{ }\PY{p}{|}\PY{+w}{ }sed\PY{+w}{ }\PY{l+s+s1}{\PYZsq{}s/..\PYZbs{}/fastq\PYZbs{}///\PYZsq{}}\PY{+w}{ }\PY{p}{|}\PY{+w}{ }sed\PY{+w}{ }\PY{l+s+s1}{\PYZsq{}s/\PYZbs{}\PYZus{}1.fastq.gz//\PYZsq{}}
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -914,7 +946,7 @@ Now gather together the results
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary all\PYZus{}results ariba.*/report.tsv
+ariba\PY{+w}{ }summary\PY{+w}{ }all\PYZus{}results\PY{+w}{ }ariba.*/report.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -989,7 +1021,7 @@ First, let's change to the directory with the reference data.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{n+nb}{cd} ../Ref/
+\PY{n+nb}{cd}\PY{+w}{ }../Ref/
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1017,7 +1049,7 @@ interest. In this case, the SNPs file simply contains one line:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-cat aln2meta\PYZus{}input/folP\PYZus{}in.tsv
+cat\PY{+w}{ }aln2meta\PYZus{}input/folP\PYZus{}in.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1047,8 +1079,8 @@ run:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba aln2meta \PYZhy{}\PYZhy{}variant\PYZus{}only aln2meta\PYZus{}input/folP.aln \PY{l+s+se}{\PYZbs{}}
-aln2meta\PYZus{}input/folP\PYZus{}in.tsv coding aln2meta\PYZus{}output/folP
+ariba\PY{+w}{ }aln2meta\PY{+w}{ }\PYZhy{}\PYZhy{}variant\PYZus{}only\PY{+w}{ }aln2meta\PYZus{}input/folP.aln\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+aln2meta\PYZus{}input/folP\PYZus{}in.tsv\PY{+w}{ }coding\PY{+w}{ }aln2meta\PYZus{}output/folP
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1077,7 +1109,7 @@ aln2meta\PYZus{}input/folP\PYZus{}in.tsv coding aln2meta\PYZus{}output/folP
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ls aln2meta\PYZus{}output/folP*
+ls\PY{+w}{ }aln2meta\PYZus{}output/folP*
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1089,9 +1121,9 @@ database:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba prepareref \PYZhy{}f aln2meta\PYZus{}output/folP.fa \PY{l+s+se}{\PYZbs{}}
-    \PYZhy{}m aln2meta\PYZus{}output/folP.tsv \PYZhy{}\PYZhy{}cdhit\PYZus{}clusters \PY{l+s+se}{\PYZbs{}}
-    aln2meta\PYZus{}output/folP.cluster test.aribadb
+ariba\PY{+w}{ }prepareref\PY{+w}{ }\PYZhy{}f\PY{+w}{ }aln2meta\PYZus{}output/folP.fa\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }\PYZhy{}m\PY{+w}{ }aln2meta\PYZus{}output/folP.tsv\PY{+w}{ }\PYZhy{}\PYZhy{}cdhit\PYZus{}clusters\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }aln2meta\PYZus{}output/folP.cluster\PY{+w}{ }test.aribadb
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1102,7 +1134,7 @@ made:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ls test.aribadb
+ls\PY{+w}{ }test.aribadb
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1114,7 +1146,7 @@ interest, so we will delete it.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-rm \PYZhy{}r test.aribadb
+rm\PY{+w}{ }\PYZhy{}r\PY{+w}{ }test.aribadb
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1131,8 +1163,8 @@ instead of \texttt{coding}. For example:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba aln2meta \PYZhy{}\PYZhy{}variant\PYZus{}only aln2meta\PYZus{}input/16S.aln \PY{l+s+se}{\PYZbs{}}
-    aln2meta\PYZus{}input/16S\PYZus{}in.tsv noncoding aln2meta\PYZus{}output/16S
+ariba\PY{+w}{ }aln2meta\PY{+w}{ }\PYZhy{}\PYZhy{}variant\PYZus{}only\PY{+w}{ }aln2meta\PYZus{}input/16S.aln\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }aln2meta\PYZus{}input/16S\PYZus{}in.tsv\PY{+w}{ }noncoding\PY{+w}{ }aln2meta\PYZus{}output/16S
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1143,10 +1175,10 @@ sequences:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{k}{for} x in folP gyrA mtrR parC parE penA ponA porB1b rpoB rpsJ
+\PY{k}{for}\PY{+w}{ }x\PY{+w}{ }\PY{k}{in}\PY{+w}{ }folP\PY{+w}{ }gyrA\PY{+w}{ }mtrR\PY{+w}{ }parC\PY{+w}{ }parE\PY{+w}{ }penA\PY{+w}{ }ponA\PY{+w}{ }porB1b\PY{+w}{ }rpoB\PY{+w}{ }rpsJ
 \PY{k}{do}
-    ariba aln2meta \PYZhy{}\PYZhy{}variant\PYZus{}only aln2meta\PYZus{}input/\PY{n+nv}{\PYZdl{}x}.aln \PY{l+s+se}{\PYZbs{}}
-    aln2meta\PYZus{}input/\PY{n+nv}{\PYZdl{}x}\PY{l+s+se}{\PYZbs{}\PYZus{}}in.tsv coding aln2meta\PYZus{}output/\PY{n+nv}{\PYZdl{}x}
+\PY{+w}{    }ariba\PY{+w}{ }aln2meta\PY{+w}{ }\PYZhy{}\PYZhy{}variant\PYZus{}only\PY{+w}{ }aln2meta\PYZus{}input/\PY{n+nv}{\PYZdl{}x}.aln\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }aln2meta\PYZus{}input/\PY{n+nv}{\PYZdl{}x}\PY{l+s+se}{\PYZbs{}\PYZus{}}in.tsv\PY{+w}{ }coding\PY{+w}{ }aln2meta\PYZus{}output/\PY{n+nv}{\PYZdl{}x}
 \PY{k}{done}
 \end{Verbatim}
 \end{tcolorbox}
@@ -1156,10 +1188,10 @@ sequences:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{k}{for} x in 16S 23S
+\PY{k}{for}\PY{+w}{ }x\PY{+w}{ }\PY{k}{in}\PY{+w}{ }16S\PY{+w}{ }23S
 \PY{k}{do}
-    ariba aln2meta \PYZhy{}\PYZhy{}variant\PYZus{}only aln2meta\PYZus{}input/\PY{n+nv}{\PYZdl{}x}.aln \PY{l+s+se}{\PYZbs{}}
-    aln2meta\PYZus{}input/\PY{n+nv}{\PYZdl{}x}\PY{l+s+se}{\PYZbs{}\PYZus{}}in.tsv noncoding aln2meta\PYZus{}output/\PY{n+nv}{\PYZdl{}x}
+\PY{+w}{    }ariba\PY{+w}{ }aln2meta\PY{+w}{ }\PYZhy{}\PYZhy{}variant\PYZus{}only\PY{+w}{ }aln2meta\PYZus{}input/\PY{n+nv}{\PYZdl{}x}.aln\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }aln2meta\PYZus{}input/\PY{n+nv}{\PYZdl{}x}\PY{l+s+se}{\PYZbs{}\PYZus{}}in.tsv\PY{+w}{ }noncoding\PY{+w}{ }aln2meta\PYZus{}output/\PY{n+nv}{\PYZdl{}x}
 \PY{k}{done}
 \end{Verbatim}
 \end{tcolorbox}
@@ -1170,24 +1202,24 @@ to make input files for running \texttt{ariba\ prepareref}.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-cat aln2meta\PYZus{}output/*.fa presence\PYZus{}absence/*.fa \PYZgt{} Ngo\PYZus{}ARIBA.fa
+cat\PY{+w}{ }aln2meta\PYZus{}output/*.fa\PY{+w}{ }presence\PYZus{}absence/*.fa\PY{+w}{ }\PYZgt{}\PY{+w}{ }Ngo\PYZus{}ARIBA.fa
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-cat aln2meta\PYZus{}output/*.tsv presence\PYZus{}absence/presence\PYZus{}absence.tsv \PY{l+s+se}{\PYZbs{}}
-    \PYZgt{} Ngo\PYZus{}ARIBA.tsv
+cat\PY{+w}{ }aln2meta\PYZus{}output/*.tsv\PY{+w}{ }presence\PYZus{}absence/presence\PYZus{}absence.tsv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }\PYZgt{}\PY{+w}{ }Ngo\PYZus{}ARIBA.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-cat aln2meta\PYZus{}output/*.cluster \PY{l+s+se}{\PYZbs{}}
-    presence\PYZus{}absence/presence\PYZus{}absence.clusters \PY{l+s+se}{\PYZbs{}}
-    \PYZgt{} Ngo\PYZus{}ARIBA.clusters
+cat\PY{+w}{ }aln2meta\PYZus{}output/*.cluster\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }presence\PYZus{}absence/presence\PYZus{}absence.clusters\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }\PYZgt{}\PY{+w}{ }Ngo\PYZus{}ARIBA.clusters
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1199,15 +1231,15 @@ generate the database:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-rm \PYZhy{}rf Ngo\PYZus{}ARIBAdb
+rm\PY{+w}{ }\PYZhy{}rf\PY{+w}{ }Ngo\PYZus{}ARIBAdb
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba prepareref \PYZhy{}f Ngo\PYZus{}ARIBA.fa \PYZhy{}m Ngo\PYZus{}ARIBA.tsv \PY{l+s+se}{\PYZbs{}}
-    \PYZhy{}\PYZhy{}cdhit\PYZus{}clusters Ngo\PYZus{}ARIBA.clusters Ngo\PYZus{}ARIBAdb
+ariba\PY{+w}{ }prepareref\PY{+w}{ }\PYZhy{}f\PY{+w}{ }Ngo\PYZus{}ARIBA.fa\PY{+w}{ }\PYZhy{}m\PY{+w}{ }Ngo\PYZus{}ARIBA.tsv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }\PYZhy{}\PYZhy{}cdhit\PYZus{}clusters\PY{+w}{ }Ngo\PYZus{}ARIBA.clusters\PY{+w}{ }Ngo\PYZus{}ARIBAdb
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1221,7 +1253,7 @@ ls
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{n+nb}{cd} ..
+\PY{n+nb}{cd}\PY{+w}{ }..
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1317,7 +1349,7 @@ have already been run and the results are found in the directory
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ls ARIBA\PYZus{}reports
+ls\PY{+w}{ }ARIBA\PYZus{}reports
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1350,7 +1382,7 @@ directory \texttt{ARIBA\_reports/}.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ls ARIBA\PYZus{}reports \PY{p}{|} wc \PYZhy{}l
+ls\PY{+w}{ }ARIBA\PYZus{}reports\PY{+w}{ }\PY{p}{|}\PY{+w}{ }wc\PY{+w}{ }\PYZhy{}l
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1380,7 +1412,7 @@ except we will skip making the tree (option \texttt{-\/-no\_tree}):
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary \PYZhy{}\PYZhy{}no\PYZus{}tree out ARIBA\PYZus{}reports/*.tsv
+ariba\PY{+w}{ }summary\PY{+w}{ }\PYZhy{}\PYZhy{}no\PYZus{}tree\PY{+w}{ }out\PY{+w}{ }ARIBA\PYZus{}reports/*.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1389,7 +1421,7 @@ ariba summary \PYZhy{}\PYZhy{}no\PYZus{}tree out ARIBA\PYZus{}reports/*.tsv
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ls out.*
+ls\PY{+w}{ }out.*
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1400,7 +1432,7 @@ in the output:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-head \PYZhy{}n \PY{l+m}{2} out.phandango.csv
+head\PY{+w}{ }\PYZhy{}n\PY{+w}{ }\PY{l+m}{2}\PY{+w}{ }out.phandango.csv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1422,8 +1454,8 @@ file with the naming information:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ls ARIBA\PYZus{}reports/* \PY{p}{|} awk \PYZhy{}F/ \PY{l+s+s1}{\PYZsq{}\PYZob{}print \PYZdl{}0,\PYZdl{}NF\PYZcb{}\PYZsq{}} \PY{p}{|} \PY{l+s+se}{\PYZbs{}}
-    sed \PY{l+s+s1}{\PYZsq{}s/.tsv\PYZdl{}//\PYZsq{}} \PYZgt{} filenames.fofn
+ls\PY{+w}{ }ARIBA\PYZus{}reports/*\PY{+w}{ }\PY{p}{|}\PY{+w}{ }awk\PY{+w}{ }\PYZhy{}F/\PY{+w}{ }\PY{l+s+s1}{\PYZsq{}\PYZob{}print \PYZdl{}0,\PYZdl{}NF\PYZcb{}\PYZsq{}}\PY{+w}{ }\PY{p}{|}\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }sed\PY{+w}{ }\PY{l+s+s1}{\PYZsq{}s/.tsv\PYZdl{}//\PYZsq{}}\PY{+w}{ }\PYZgt{}\PY{+w}{ }filenames.fofn
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1433,7 +1465,7 @@ name we would like to use in the output.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-head filenames.fofn
+head\PY{+w}{ }filenames.fofn
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1443,8 +1475,8 @@ option \texttt{-\/-fofn}.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary \PYZhy{}\PYZhy{}no\PYZus{}tree \PYZhy{}\PYZhy{}fofn filenames.fofn \PY{l+s+se}{\PYZbs{}}
-    out ARIBA\PYZus{}reports/*.tsv
+ariba\PY{+w}{ }summary\PY{+w}{ }\PYZhy{}\PYZhy{}no\PYZus{}tree\PY{+w}{ }\PYZhy{}\PYZhy{}fofn\PY{+w}{ }filenames.fofn\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }out\PY{+w}{ }ARIBA\PYZus{}reports/*.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1453,7 +1485,7 @@ ariba summary \PYZhy{}\PYZhy{}no\PYZus{}tree \PYZhy{}\PYZhy{}fofn filenames.fofn
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-head \PYZhy{}n \PY{l+m}{2} out.phandango.csv
+head\PY{+w}{ }\PYZhy{}n\PY{+w}{ }\PY{l+m}{2}\PY{+w}{ }out.phandango.csv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1494,8 +1526,8 @@ columns for the 23S cluster:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary \PYZhy{}\PYZhy{}only\PYZus{}clusters 23S \PYZhy{}\PYZhy{}preset cluster\PYZus{}all \PYZhy{}\PYZhy{}no\PYZus{}tree \PY{l+s+se}{\PYZbs{}}
-  \PYZhy{}\PYZhy{}fofn filenames.fofn out ARIBA\PYZus{}reports/*.tsv
+ariba\PY{+w}{ }summary\PY{+w}{ }\PYZhy{}\PYZhy{}only\PYZus{}clusters\PY{+w}{ }23S\PY{+w}{ }\PYZhy{}\PYZhy{}preset\PY{+w}{ }cluster\PYZus{}all\PY{+w}{ }\PYZhy{}\PYZhy{}no\PYZus{}tree\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{  }\PYZhy{}\PYZhy{}fofn\PY{+w}{ }filenames.fofn\PY{+w}{ }out\PY{+w}{ }ARIBA\PYZus{}reports/*.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1521,9 +1553,9 @@ example, this will show just the ``match'' and ``pct\_id'' columns:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary \PYZhy{}\PYZhy{}only\PYZus{}clusters 23S \PYZhy{}\PYZhy{}cluster\PYZus{}cols match,pct\PYZus{}id \PY{l+s+se}{\PYZbs{}}
-    \PYZhy{}\PYZhy{}no\PYZus{}tree \PYZhy{}\PYZhy{}fofn filenames.fofn out \PY{l+s+se}{\PYZbs{}}
-    ARIBA\PYZus{}reports/*.tsv
+ariba\PY{+w}{ }summary\PY{+w}{ }\PYZhy{}\PYZhy{}only\PYZus{}clusters\PY{+w}{ }23S\PY{+w}{ }\PYZhy{}\PYZhy{}cluster\PYZus{}cols\PY{+w}{ }match,pct\PYZus{}id\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }\PYZhy{}\PYZhy{}no\PYZus{}tree\PY{+w}{ }\PYZhy{}\PYZhy{}fofn\PY{+w}{ }filenames.fofn\PY{+w}{ }out\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }ARIBA\PYZus{}reports/*.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1546,8 +1578,8 @@ We can view the calls for all the known variants by adding the
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary \PYZhy{}\PYZhy{}only\PYZus{}clusters 23S \PYZhy{}\PYZhy{}known\PYZus{}variants \PYZhy{}\PYZhy{}no\PYZus{}tree \PY{l+s+se}{\PYZbs{}}
-  \PYZhy{}\PYZhy{}fofn filenames.fofn out ARIBA\PYZus{}reports/*.tsv
+ariba\PY{+w}{ }summary\PY{+w}{ }\PYZhy{}\PYZhy{}only\PYZus{}clusters\PY{+w}{ }23S\PY{+w}{ }\PYZhy{}\PYZhy{}known\PYZus{}variants\PY{+w}{ }\PYZhy{}\PYZhy{}no\PYZus{}tree\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{  }\PYZhy{}\PYZhy{}fofn\PY{+w}{ }filenames.fofn\PY{+w}{ }out\PY{+w}{ }ARIBA\PYZus{}reports/*.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1575,8 +1607,8 @@ the percentage.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary \PYZhy{}\PYZhy{}only\PYZus{}clusters 23S \PYZhy{}\PYZhy{}novel\PYZus{}variants \PYZhy{}\PYZhy{}no\PYZus{}tree \PY{l+s+se}{\PYZbs{}}
-  \PYZhy{}\PYZhy{}fofn filenames.fofn out ARIBA\PYZus{}reports/*.tsv
+ariba\PY{+w}{ }summary\PY{+w}{ }\PYZhy{}\PYZhy{}only\PYZus{}clusters\PY{+w}{ }23S\PY{+w}{ }\PYZhy{}\PYZhy{}novel\PYZus{}variants\PY{+w}{ }\PYZhy{}\PYZhy{}no\PYZus{}tree\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{  }\PYZhy{}\PYZhy{}fofn\PY{+w}{ }filenames.fofn\PY{+w}{ }out\PY{+w}{ }ARIBA\PYZus{}reports/*.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1620,7 +1652,7 @@ at least one drug. It looks like this:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-head mic\PYZus{}data.tsv
+head\PY{+w}{ }mic\PYZus{}data.tsv
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1641,9 +1673,9 @@ be identified:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba summary \PYZhy{}\PYZhy{}row\PYZus{}filter n \PYZhy{}\PYZhy{}cluster\PYZus{}cols assembled,known\PYZus{}var \PY{l+s+se}{\PYZbs{}}
-    \PYZhy{}\PYZhy{}only\PYZus{}clusters 23S,mtrR \PYZhy{}\PYZhy{}v\PYZus{}groups \PYZhy{}\PYZhy{}no\PYZus{}tree \PY{l+s+se}{\PYZbs{}}
-    \PYZhy{}\PYZhy{}fofn filenames.fofn summary.AZMknowngroups
+ariba\PY{+w}{ }summary\PY{+w}{ }\PYZhy{}\PYZhy{}row\PYZus{}filter\PY{+w}{ }n\PY{+w}{ }\PYZhy{}\PYZhy{}cluster\PYZus{}cols\PY{+w}{ }assembled,known\PYZus{}var\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }\PYZhy{}\PYZhy{}only\PYZus{}clusters\PY{+w}{ }23S,mtrR\PY{+w}{ }\PYZhy{}\PYZhy{}v\PYZus{}groups\PY{+w}{ }\PYZhy{}\PYZhy{}no\PYZus{}tree\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }\PYZhy{}\PYZhy{}fofn\PY{+w}{ }filenames.fofn\PY{+w}{ }summary.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1656,9 +1688,9 @@ and mtrR:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba micplot Ref/Ngo\PYZus{}ARIBAdb/ \PYZhy{}\PYZhy{}interrupted Azithromycin \PY{l+s+se}{\PYZbs{}}
-    mic\PYZus{}data.tsv summary.AZMknowngroups.csv \PY{l+s+se}{\PYZbs{}}
-    micplot.AZMknowngroups
+ariba\PY{+w}{ }micplot\PY{+w}{ }Ref/Ngo\PYZus{}ARIBAdb/\PY{+w}{ }\PYZhy{}\PYZhy{}interrupted\PY{+w}{ }Azithromycin\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }mic\PYZus{}data.tsv\PY{+w}{ }summary.AZMknowngroups.csv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }micplot.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1684,9 +1716,9 @@ in this case 0.25 and 2, using the option \texttt{-\/-hlines}.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba micplot Ref/Ngo\PYZus{}ARIBAdb/ \PYZhy{}\PYZhy{}interrupted \PYZhy{}\PYZhy{}hlines \PY{l+m}{0}.25,2 \PY{l+s+se}{\PYZbs{}}
-    Azithromycin mic\PYZus{}data.tsv summary.AZMknowngroups.csv \PY{l+s+se}{\PYZbs{}}
-    micplot.AZMknowngroups
+ariba\PY{+w}{ }micplot\PY{+w}{ }Ref/Ngo\PYZus{}ARIBAdb/\PY{+w}{ }\PYZhy{}\PYZhy{}interrupted\PY{+w}{ }\PYZhy{}\PYZhy{}hlines\PY{+w}{ }\PY{l+m}{0}.25,2\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }Azithromycin\PY{+w}{ }mic\PYZus{}data.tsv\PY{+w}{ }summary.AZMknowngroups.csv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }micplot.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1712,9 +1744,9 @@ points together.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba micplot Ref/Ngo\PYZus{}ARIBAdb/ \PYZhy{}\PYZhy{}interrupted \PYZhy{}\PYZhy{}hlines \PY{l+m}{0}.25,2 \PY{l+s+se}{\PYZbs{}}
-    \PYZhy{}\PYZhy{}point\PYZus{}size \PY{l+m}{0} Azithromycin mic\PYZus{}data.tsv \PY{l+s+se}{\PYZbs{}}
-    summary.AZMknowngroups.csv micplot.AZMknowngroups
+ariba\PY{+w}{ }micplot\PY{+w}{ }Ref/Ngo\PYZus{}ARIBAdb/\PY{+w}{ }\PYZhy{}\PYZhy{}interrupted\PY{+w}{ }\PYZhy{}\PYZhy{}hlines\PY{+w}{ }\PY{l+m}{0}.25,2\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }\PYZhy{}\PYZhy{}point\PYZus{}size\PY{+w}{ }\PY{l+m}{0}\PY{+w}{ }Azithromycin\PY{+w}{ }mic\PYZus{}data.tsv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{    }summary.AZMknowngroups.csv\PY{+w}{ }micplot.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1733,10 +1765,10 @@ plot, using the option \texttt{-\/-plot\_types}. The default is
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba micplot Ref/Ngo\PYZus{}ARIBAdb/ \PYZhy{}\PYZhy{}interrupted \PYZhy{}\PYZhy{}hlines \PY{l+m}{0}.25,2 \PY{l+s+se}{\PYZbs{}}
- \PYZhy{}\PYZhy{}plot\PYZus{}types point \PYZhy{}\PYZhy{}point\PYZus{}size \PY{l+m}{0} \PY{l+s+se}{\PYZbs{}}
- Azithromycin mic\PYZus{}data.tsv summary.AZMknowngroups.csv \PY{l+s+se}{\PYZbs{}}
- micplot.AZMknowngroups
+ariba\PY{+w}{ }micplot\PY{+w}{ }Ref/Ngo\PYZus{}ARIBAdb/\PY{+w}{ }\PYZhy{}\PYZhy{}interrupted\PY{+w}{ }\PYZhy{}\PYZhy{}hlines\PY{+w}{ }\PY{l+m}{0}.25,2\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }\PYZhy{}\PYZhy{}plot\PYZus{}types\PY{+w}{ }point\PY{+w}{ }\PYZhy{}\PYZhy{}point\PYZus{}size\PY{+w}{ }\PY{l+m}{0}\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }Azithromycin\PY{+w}{ }mic\PYZus{}data.tsv\PY{+w}{ }summary.AZMknowngroups.csv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }micplot.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1761,9 +1793,9 @@ palette can be changed using the option \texttt{-\/-colourmap}.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba micplot Ref/Ngo\PYZus{}ARIBAdb/ \PYZhy{}\PYZhy{}interrupted \PYZhy{}\PYZhy{}hlines \PY{l+m}{0}.25,2 \PY{l+s+se}{\PYZbs{}}
- \PYZhy{}\PYZhy{}colourmap PiYG \PYZhy{}\PYZhy{}point\PYZus{}size \PY{l+m}{0} Azithromycin mic\PYZus{}data.tsv \PY{l+s+se}{\PYZbs{}}
- summary.AZMknowngroups.csv micplot.AZMknowngroups
+ariba\PY{+w}{ }micplot\PY{+w}{ }Ref/Ngo\PYZus{}ARIBAdb/\PY{+w}{ }\PYZhy{}\PYZhy{}interrupted\PY{+w}{ }\PYZhy{}\PYZhy{}hlines\PY{+w}{ }\PY{l+m}{0}.25,2\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }\PYZhy{}\PYZhy{}colourmap\PY{+w}{ }PiYG\PY{+w}{ }\PYZhy{}\PYZhy{}point\PYZus{}size\PY{+w}{ }\PY{l+m}{0}\PY{+w}{ }Azithromycin\PY{+w}{ }mic\PYZus{}data.tsv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }summary.AZMknowngroups.csv\PY{+w}{ }micplot.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1782,10 +1814,10 @@ using the option \texttt{-\/-colour\_skip}:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba micplot Ref/Ngo\PYZus{}ARIBAdb/ \PYZhy{}\PYZhy{}interrupted \PYZhy{}\PYZhy{}hlines \PY{l+m}{0}.25,2 \PY{l+s+se}{\PYZbs{}}
- \PYZhy{}\PYZhy{}colourmap PiYG \PYZhy{}\PYZhy{}colour\PYZus{}skip \PY{l+m}{0}.35,0.65 \PYZhy{}\PYZhy{}point\PYZus{}size \PY{l+m}{0} \PY{l+s+se}{\PYZbs{}}
- Azithromycin mic\PYZus{}data.tsv summary.AZMknowngroups.csv \PY{l+s+se}{\PYZbs{}}
- micplot.AZMknowngroups
+ariba\PY{+w}{ }micplot\PY{+w}{ }Ref/Ngo\PYZus{}ARIBAdb/\PY{+w}{ }\PYZhy{}\PYZhy{}interrupted\PY{+w}{ }\PYZhy{}\PYZhy{}hlines\PY{+w}{ }\PY{l+m}{0}.25,2\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }\PYZhy{}\PYZhy{}colourmap\PY{+w}{ }PiYG\PY{+w}{ }\PYZhy{}\PYZhy{}colour\PYZus{}skip\PY{+w}{ }\PY{l+m}{0}.35,0.65\PY{+w}{ }\PYZhy{}\PYZhy{}point\PYZus{}size\PY{+w}{ }\PY{l+m}{0}\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }Azithromycin\PY{+w}{ }mic\PYZus{}data.tsv\PY{+w}{ }summary.AZMknowngroups.csv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }micplot.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1805,10 +1837,10 @@ the ``Dark2'' colour palette:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba micplot Ref/Ngo\PYZus{}ARIBAdb/ \PYZhy{}\PYZhy{}interrupted \PYZhy{}\PYZhy{}hlines \PY{l+m}{0}.25,2 \PY{l+s+se}{\PYZbs{}}
- \PYZhy{}\PYZhy{}colourmap Dark2 \PYZhy{}\PYZhy{}number\PYZus{}of\PYZus{}colours \PY{l+m}{3} \PYZhy{}\PYZhy{}point\PYZus{}size \PY{l+m}{0} \PY{l+s+se}{\PYZbs{}}
- Azithromycin mic\PYZus{}data.tsv summary.AZMknowngroups.csv \PY{l+s+se}{\PYZbs{}}
- micplot.AZMknowngroups
+ariba\PY{+w}{ }micplot\PY{+w}{ }Ref/Ngo\PYZus{}ARIBAdb/\PY{+w}{ }\PYZhy{}\PYZhy{}interrupted\PY{+w}{ }\PYZhy{}\PYZhy{}hlines\PY{+w}{ }\PY{l+m}{0}.25,2\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }\PYZhy{}\PYZhy{}colourmap\PY{+w}{ }Dark2\PY{+w}{ }\PYZhy{}\PYZhy{}number\PYZus{}of\PYZus{}colours\PY{+w}{ }\PY{l+m}{3}\PY{+w}{ }\PYZhy{}\PYZhy{}point\PYZus{}size\PY{+w}{ }\PY{l+m}{0}\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }Azithromycin\PY{+w}{ }mic\PYZus{}data.tsv\PY{+w}{ }summary.AZMknowngroups.csv\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }micplot.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1826,9 +1858,9 @@ figure.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-ariba micplot Ref/Ngo\PYZus{}ARIBAdb/ \PYZhy{}\PYZhy{}interrupted \PYZhy{}\PYZhy{}hlines \PY{l+m}{0}.25,2 \PY{l+s+se}{\PYZbs{}}
- \PYZhy{}\PYZhy{}number\PYZus{}of\PYZus{}colours \PY{l+m}{1} \PYZhy{}\PYZhy{}point\PYZus{}size \PY{l+m}{0} Azithromycin \PY{l+s+se}{\PYZbs{}}
- mic\PYZus{}data.tsv summary.AZMknowngroups.csv micplot.AZMknowngroups
+ariba\PY{+w}{ }micplot\PY{+w}{ }Ref/Ngo\PYZus{}ARIBAdb/\PY{+w}{ }\PYZhy{}\PYZhy{}interrupted\PY{+w}{ }\PYZhy{}\PYZhy{}hlines\PY{+w}{ }\PY{l+m}{0}.25,2\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }\PYZhy{}\PYZhy{}number\PYZus{}of\PYZus{}colours\PY{+w}{ }\PY{l+m}{1}\PY{+w}{ }\PYZhy{}\PYZhy{}point\PYZus{}size\PY{+w}{ }\PY{l+m}{0}\PY{+w}{ }Azithromycin\PY{+w}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{+w}{ }mic\PYZus{}data.tsv\PY{+w}{ }summary.AZMknowngroups.csv\PY{+w}{ }micplot.AZMknowngroups
 \end{Verbatim}
 \end{tcolorbox}
 
